@@ -1,0 +1,61 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: xinmiao
+  datasource:
+    url: jdbc:mysql://localhost:3306/xinmiao?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    default-property-inclusion: non_null
+  main:
+    banner-mode: off
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
+#    password: rkgn564
+  ai:
+    openai:
+      base-url: https://api.siliconflow.cn/
+      api-key: sk-utnctyqnxhcmpaaaaspriowtigaljakbdsawozymtttuupfi
+      chat:
+        options:
+          model: deepseek-ai/DeepSeek-V3
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      table-prefix: tb_
+    banner: false
+  type-aliases-package: xyz.rkgn.entity
+
+deepseek:
+  api:
+    key: sk-65ca1ba8f3e54ed2bf37e85bb6275d30
+    #无状态 API
+    url: https://api.deepseek.com/v1/chat/completions
+
+python:
+  server:
+    url: http://localhost:8000
+
+#key与id通过环境变量设置 OSS_ACCESS_KEY_ID OSS_ACCESS_KEY_SECRET
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: test-for-tree
+    region: cn-beijing

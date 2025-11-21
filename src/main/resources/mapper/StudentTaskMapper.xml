@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.rkgn.mapper.StudentTaskMapper">
+
+    <!-- 批量插入学生任务关联记录 -->
+    <insert id="batchInsert">
+        INSERT INTO tb_student_task (
+        student_id,
+        task_id,
+        status,
+        create_time,
+        update_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.studentId},
+            #{item.taskId},
+            #{item.status},
+            #{item.createTime},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 查询学生的未完成任务 -->
+    <select id="selectUnfinishedTasks" resultType="xyz.rkgn.entity.Task">
+        SELECT t.* FROM tb_task t
+        WHERE t.is_published = 1  -- 只查已发布任务
+          AND t.id NOT IN (
+            -- 排除该学生已完成的任务
+            SELECT task_id FROM tb_student_task
+            WHERE student_id = #{studentId}
+              AND status = 1  -- status=1表示已完成
+        )
+          -- 任务可见范围：校级/本院级/本班级
+          AND (
+            t.level = '校级'
+                OR (t.level = '院级' AND t.college = #{college})
+                OR (t.level = '班级' AND t.clazz = #{clazz})
+            )
+        ORDER BY t.create_time DESC
+    </select>
+
+</mapper>
